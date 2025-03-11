@@ -1,0 +1,46 @@
+services:
+  # PostgreSQL with pgvector extension
+  postgres:
+    image: postgres:15
+    container_name: fastgpt-postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    volumes:
+      - ./pg/data:/var/lib/postgresql/data
+    networks:
+      - fastgpt
+
+  # MongoDB
+  mongodb:
+    image: mongo:6
+    container_name: fastgpt-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: myusername
+      MONGO_INITDB_ROOT_PASSWORD: mypassword
+    volumes:
+      - ./mongo/data:/data/db
+    command: mongod --replSet rs0
+    networks:
+      - fastgpt
+
+  # MongoDB setup - initialize replica set
+  mongo-init:
+    image: mongo:6
+    depends_on:
+      - mongodb
+    restart: "no"
+    entrypoint: [ "bash", "-c", "sleep 10 && mongosh --host mongodb:27017 -u myusername -p mypassword --authenticationDatabase admin --eval 'rs.initiate({_id: \"rs0\", members: [{_id: 0, host: \"mongodb:27017\"}]})'" ]
+    networks:
+      - fastgpt
+
+networks:
+  fastgpt:
+    driver: bridge
