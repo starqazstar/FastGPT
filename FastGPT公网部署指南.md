@@ -19,6 +19,7 @@ brew install ngrok
 
 ### 2. 配置ngrok认证令牌
 
+账号官网：https://dashboard.ngrok.com/get-started/setup/macos
 注册ngrok账号后，获取authtoken并配置：
 
 ```bash
