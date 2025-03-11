@@ -44,3 +44,22 @@ files/helm/fastgpt/fastgpt-0.1.0.tgz
 files/helm/fastgpt/charts/*.tgz
 
 tmp/
+
+# large model files
+models/
+
+# database files
+deploy/pg/data/
+deploy/mysql/
+deploy/mongo/data/
+
+# sensitive configuration files
+.env
+*.env
+projects/app/.env
+packages/service/core/ai/config/provider/*.json
+
+# log files
+*.log
+logs/
+deploy/*/logs/
